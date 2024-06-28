@@ -44,6 +44,7 @@ services:
     volumes:
       - ./mongo/mongod.conf:/etc/mongod.conf
       - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+      - ./mongo/export-data.sh:/usr/local/bin/export-data.sh
     env_file:
       - ./.env
 

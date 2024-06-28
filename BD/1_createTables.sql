@@ -1,0 +1,88 @@
+CREATE TABLE `Usuarios` (
+  `IDusuario` INT PRIMARY KEY AUTO_INCREMENT,
+  `Nombre` VARCHAR(100) NOT NULL,
+  `Apellido` VARCHAR(100) NOT NULL,
+  `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `FechaDeNacimiento` DATE,
+  `Tel` VARCHAR(20),
+  `CorreoElectronico` VARCHAR(150) UNIQUE,
+  `CreatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `UpdatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `SUsuarios` (
+  `IDSusuario` INT PRIMARY KEY AUTO_INCREMENT,
+  `IDusuario` INT,
+  `Nombre` VARCHAR(80),
+  `Apellido` VARCHAR(80),
+  `User` VARCHAR(80),
+  `Type` VARCHAR(80),
+  `CreatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `Departamentos` (
+  `IDdepartamento` INT PRIMARY KEY AUTO_INCREMENT,
+  `Nombre` VARCHAR(80),
+  `CreatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `UpdatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `Atracciones` (
+  `IDatraccion` INT PRIMARY KEY AUTO_INCREMENT,
+  `Nombre` VARCHAR(80),
+  `Ubicacion` VARCHAR(80),
+  `Descripcion` TEXT,
+  `HorarioAbre` TIME,
+  `HorarioCierre` TIME,
+  `IDdepartamento` INT,
+  `CreatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `UpdatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`IDdepartamento`) REFERENCES `Departamentos` (`IDdepartamento`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+  );
+
+CREATE TABLE `SAtracciones` (
+  `IDSatraccion` INT PRIMARY KEY AUTO_INCREMENT,
+  `IDatraccion` INT,
+  `Nombre` VARCHAR(80),
+  `User` VARCHAR(80),
+  `Type` VARCHAR(80),
+  `CreatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `MetodoPago` (
+  `IDMetodoPago` INT PRIMARY KEY AUTO_INCREMENT,
+  `Metodo` VARCHAR(80),
+  `CreatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `UpdatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `Reservas` (
+  `IDreserva` INT PRIMARY KEY AUTO_INCREMENT,
+  `IDusuario` INT,
+  `IDatraccion` INT,
+  `FechaHora` DATETIME,
+  `NumPersonas` INT,
+  `IDMetodoPago` INT,
+  `Estado` VARCHAR(80) DEFAULT 'Pendiente',
+  `CreatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `UpdatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`IDusuario`) REFERENCES `Usuarios` (`IDusuario`) 
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  FOREIGN KEY (`IDatraccion`) REFERENCES `Atracciones` (`IDatraccion`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  FOREIGN KEY (`IDMetodoPago`) REFERENCES `MetodoPago` (`IDMetodoPago`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
+
+CREATE TABLE `SReservas` (
+  `IDSreserva` INT PRIMARY KEY AUTO_INCREMENT,
+  `IDreserva` INT,
+  `User` VARCHAR(80),
+  `Type` VARCHAR(80),
+  `CreatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

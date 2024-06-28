@@ -283,33 +283,38 @@ db.fotos.replaceOne(
 
 // Todas las atracciones que un usuario ha calificado
 use('turismoBolivia')
-let userId = 1;
-db.comentarios.aggregate([
-    { $match: { usuarioId: userId } },
+db.usuarios.aggregate([
     {
         $lookup: {
-            from: 'atraccionesTuristicas',
-            localField: 'atraccionTuristicaId',
-            foreignField: '_id',
-            as: 'atraccion'
+            from: "comentarios",
+            localField: "_id",
+            foreignField: "usuarioId",
+            as: "comentarios"
         }
     },
-    { $unwind: '$atraccion' },
+    { $unwind: "$comentarios" }, 
     {
-        $group: {
-            _id: '$atraccion._id',
-            nombre: { $first: '$atraccion.nombre' },
-            nombreDepartamento: { $first: '$atraccion.nombreDepartamento' }
+        $lookup: {
+            from: "atraccionesTuristicas",
+            localField: "comentarios.atraccionTuristicaId",
+            foreignField: "_id",
+            as: "atraccion"
         }
     },
+    { $unwind: "$atraccion" }, 
     {
         $project: {
             _id: 0,
-            atraccionTuristicaId: '$_id',
-            nombre: 1
+            usuarioNombre: "$nombre",
+            usuarioApellido: "$apellido",
+            comentarioTexto: "$comentarios.texto",
+            comentarioCalificacion: "$comentarios.calificacion",
+            comentarioFecha: "$comentarios.timestamp",
+            atraccionNombre: "$atraccion.nombre",
+            atraccionDepartamento: "$atraccion.nombreDepartamento"
         }
     }
-])
+]).toArray();
 
 // ranking atracciones
 use('turismoBolivia')

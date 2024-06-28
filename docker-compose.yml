@@ -25,6 +25,16 @@ services:
       - mysql_net
     volumes:
       - slave_data:/var/lib/mysql
+  BigDataDocker:
+    image: mysql:8.0
+    container_name: BigDataDocker
+    environment:
+      MYSQL_ROOT_PASSWORD: hola1234
+    ports:
+      - "4535:3306"
+      - "4536:3306"
+    volumes:
+      - mysql_bigdata_data:/var/lib/mysql
   mongo:
     build:
       context: ./mongo
@@ -49,6 +59,7 @@ services:
       - ./.env
 
 volumes:
+  mysql_bigdata_data:
   master_data:
   slave_data:
 
